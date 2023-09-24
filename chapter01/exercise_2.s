@@ -8,10 +8,10 @@
 ; Output: Only the exit status ($? in the shell)
 ;
     segment .text
-    global  _start ; _start is the entry point the linker expects
+    global  main ; main is the entry point the linker expects
 
-_start:
+main:
     mov eax, 60 ; 60 is the exit syscall number
-    mov edi,  5 ; the status value to return
+    mov edi,  0 ; the status value to return
     syscall     ; execute the system call number stored in eax
     end
