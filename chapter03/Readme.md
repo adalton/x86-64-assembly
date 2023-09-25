@@ -7,35 +7,21 @@
    the 2-byte integers as unsigned values, and the string as a string.
 
    ```asm
-   ; Yasm understands the following instructions:
-   ;
-   ;	db - byte (1 byte)
-   ;	dw - word (2 bytes)
-   ;	dd - double word (4 bytes)
-   ;	dq - quad-word (8 bytes)
-   ;
-   	segment .data
-   array1		times	10 dq 0			; 10 quad word (8-byte) integers
-   string		db	"hello, world", 0	; a string terminated by 0
+           segment .data
+   array1                times 10 dq 0               ; 10 quad word (8-byte) integers
+   string                db "hello, world", 0        ; a string terminated by 0
    
-   ; Yasm understands the following instructions:
-   ;
-   ;	resb - Reserve byte (1 byte)
-   ;	resw - Reserve word (2 bytes)
-   ;	resd - Reserve double word (4 bytes)
-   ;	resq - Reserve quad word (8 bytes)
+           segment .bss
+   array2                resw        5               ; 5 double word (2-byte) integers
    
-   	segment .bss
-   array2		resw	5 			; 5 double word (2-byte) integers
-   
-   	segment .text
-   	global main 
+           segment .text
+           global main 
    main:
-   	push	rbp				; set up a stack frame
-   	mov		rbp,	rsp		; rbp points to stack frame
-   	mov		rax,	0		; return value from main
-   	leave					; undo stack frame changes
-   	ret
+           push          rbp                         ; set up a stack frame
+           mov           rbp,        rsp             ; rbp points to stack frame
+           mov           rax,        0               ; return value from main
+           leave                                     ; undo stack frame changes
+           ret
    ```
 
    > Use `gdb`'s `examine` command to print the 8-byte integers in hexadecimal
