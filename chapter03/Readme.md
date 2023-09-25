@@ -68,8 +68,9 @@
    ```none
    (gdb) p $rsp
    $1 = (void *) 0x7fffffffdc38
+   (gdb) p/t $rsp
+   $2 = 11111111111111111111111111111111101110000111000
    ```
 
-   48 bits are required to store this value (assuming the most significant
-   digit can become f).
-   
+   47 bits are required to store this value.  Assuming the most significant
+   digit can be f, then 48 bits are required.
