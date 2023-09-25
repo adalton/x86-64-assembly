@@ -1,6 +1,5 @@
 AS=yasm
 GDB=gdb
-GCC=gcc
 GDBFLAGS1=-ex "break _start"
 GDBFLAGS2=-ex "break main"
 ASFLAGS=-f elf64 -g dwarf2
@@ -19,7 +18,7 @@ $(EXECRISE1): $(EXECRISE1).o
 	$(LD) -o $@ $<
 
 $(EXECRISE2): $(EXECRISE2).o
-	$(GCC) -nostdlib -o $@ $<
+	$(CC) -nostdlib -o $@ $<
 
 clean:
 	$(RM) *.lst *.o *.bak $(PROGS)

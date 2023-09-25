@@ -8,7 +8,7 @@
 ; Output: Only the exit status ($? in the shell)
 ;
     segment .text
-    global  main ; main is the entry point the linker expects
+    global  main
 
 main:
     mov eax, 60 ; 60 is the exit syscall number
