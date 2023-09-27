@@ -7,8 +7,6 @@ PROG=ex
 all: $(PROG)
 
 $(PROG).o: $(PROG).s
-#$(PROG): $(PROG).o
-#	$(LD) -o $@ $<
 $(PROG): $(PROG).o
 	$(CC) -no-pie -o $@ $<
 
