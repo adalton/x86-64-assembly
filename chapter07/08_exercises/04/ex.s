@@ -37,7 +37,7 @@ main:
 	xor	bl,	al		; byte 8
 	ror	rax,	8
 
-; ax = 11111111
+; ebx = 11111111
 ; rax = a (original value of a)
 
 	xor	eax,	eax		; return 0
