@@ -89,7 +89,7 @@
    line segment is vertical (infinite or undefined slope) and 0 if it is not.
    You should use a conditional move to set the value of `rax`.
 
-   ```none
+   ```asm
    ; m = (y2 - y1) / (x2 - x1)
    ;
    ; With (5, 7) and (14, 8):
