@@ -48,18 +48,18 @@
    
            global main
    main:
-           push       rbp
-           mov        rbp,        rsp
+           push        rbp
+           mov         rbp,         rsp
    
-           call readRecords
-           cmp        rax,        0
+           call        readRecords
+           cmp         rax,         0
            jz         .done                        ; Zero customers read
    
-           mov        rdi,        rax
-           call printRecords
+           mov         rdi,         rax
+           call        printRecords
    
    .done
-           xor        eax,        eax
+           xor         eax,         eax
            leave
            ret
    
@@ -74,53 +74,53 @@
    ; r13 = penniesPerDollar
    ;
    printRecords:
-   .numRecords        equ         0              ; long numRecords;
+   .numRecords         equ          0              ; long numRecords;
    
-           push       rbp
-           mov        rbp,        rsp
-           push       rbx                        ; Save callee-saved register
-           push       r12                        ; Save callee-saved register
-           push       r13                        ; Save callee-saved register
-           sub        rsp,        8              ; Allocate room for numRecords on stack
-                                                 ; keeping stack 16-byte aligned
+           push        rbp
+           mov         rbp,         rsp
+           push        rbx                        ; Save callee-saved register
+           push        r12                        ; Save callee-saved register
+           push        r13                        ; Save callee-saved register
+           sub         rsp,         8             ; Allocate room for numRecords on stack
+                                                  ; keeping stack 16-byte aligned
    
-           mov        [rsp + .numRecords], rdi   ; Save numRecords on the stack
+           mov         [rsp + .numRecords], rdi   ; Save numRecords on the stack
    
-           mov        r12,        0              ; i = 0;
+           mov         r12,         0             ; i = 0;
 
            ; Start curr off so that we can increment it first thing
-           lea        rbx,        [recs - custRecSize]        ; rbx = &recs[-1]
+           lea         rbx,         [recs - custRecSize]  ; rbx = &recs[-1]
    
    .begin:
-           add        rbx,        custRecSize                 ; curr = next entry
+           add         rbx,         custRecSize           ; curr = next entry
    
-           mov        rdi,        [rbx + custRecKw]
-           call       computeBill
+           mov         rdi,         [rbx + custRecKw]
+           call        computeBill
    
            ; rax contains the return value of computeBill
            ; rax:rdx contains the dividend, zero rdx
-           xor        edx,        edx
+           xor         edx,         edx
    
-           mov        r13,        penniesPerDollar
-           idiv       qword r13
+           mov         r13,         penniesPerDollar
+           idiv        qword r13
    
            ; quotient is in rax, remainder is in rdx
    
-           lea        rdi,        [printBill]
-           lea        rsi,        [rbx + custRecName]
-           mov        rcx,        rdx
-           mov        rdx,        rax
-           xor        eax,        eax
-           call       printf
+           lea         rdi,         [printBill]
+           lea         rsi,         [rbx + custRecName]
+           mov         rcx,         rdx
+           mov         rdx,         rax
+           xor         eax,         eax
+           call        printf
    
-           inc        r12
-           cmp        r12,        [rsp + .numRecords]
-           jl         .begin
+           inc         r12
+           cmp         r12,         [rsp + .numRecords]
+           jl          .begin
    
-           add        rsp,        8
-           pop        r13                        ; Restore callee-saved register
-           pop        r12                        ; Restore callee-saved register
-           pop        rbx                        ; Restore callee-saved register
+           add         rsp,         8
+           pop         r13                        ; Restore callee-saved register
+           pop         r12                        ; Restore callee-saved register
+           pop         rbx                        ; Restore callee-saved register
            leave
            ret
    
@@ -132,17 +132,17 @@
    ; 1000 if the usage is greater than 1000.
    ;
    computeBill:
-           push       rbp
-           mov        rbp,        rsp
+           push        rbp
+           mov         rbp,         rsp
    
    
-           mov        rax,        baseBillPennies                ; ret = $20.00
-           cmp        rdi,        baseThresholdHrs
-           jle        .done
+           mov         rax,         baseBillPennies             ; ret = $20.00
+           cmp         rdi,         baseThresholdHrs
+           jle         .done
    
            ; $20.00 + 1 cent per kilowatt hour over 1000
-           sub        rdi,        baseThresholdHrs
-           add        rax,        rdi
+           sub         rdi,         baseThresholdHrs
+           add         rax,         rdi
    
    .done
            leave
@@ -158,56 +158,56 @@
    ;  r12 = i
    ;
    readRecords:
-           push       rbp
-           mov        rbp,        rsp
-           push       rbx                        ; Save callee-saved register
-           push       r12                        ; Save callee-saved register
+           push        rbp
+           mov         rbp,         rsp
+           push        rbx                        ; Save callee-saved register
+           push        r12                        ; Save callee-saved register
    
            ;----------------------------------------------------------------------
            ; Start i and curr at -1 offsets so that we can increment them
            ; first thing in the loop
            ;----------------------------------------------------------------------
-           mov        r12,        -1                        ; i = -1
-           lea        rbx,        [recs - custRecSize]      ; curr = &recs[-1]
+           mov         r12,         -1                        ; i = -1
+           lea         rbx,         [recs - custRecSize]      ; curr = &recs[-1]
    
    .begin_loop:
            ; -- Advance current --------------------------------------------------
-           add        rbx,        custRecSize        ; curr = next entry
-           inc        r12
+           add         rbx,         custRecSize       ; curr = next entry
+           inc         r12
    
-           cmp        r12,        maxRecords         ; Don't run off the end of the array
-           jz        .done
+           cmp         r12,         maxRecords        ; Don't run off the end of the array
+           jz         .done
    
            ; -- Read name --------------------------------------------------------
-           lea        rdi,        [namePrompt]
-           xor        eax,        eax                ; No floating point operands to printf
-           call       printf
+           lea         rdi,         [namePrompt]
+           xor         eax,         eax               ; No floating point operands to printf
+           call        printf
    
-           lea        rdi,        [nameScan]
-           lea        rsi,        [rbx + custRecName]
-           xor        eax,        eax                ; No floating point operands to scanf
-           call       scanf
+           lea         rdi,         [nameScan]
+           lea         rsi,         [rbx + custRecName]
+           xor         eax,         eax               ; No floating point operands to scanf
+           call        scanf
    
            ; -- Read kilowatts ---------------------------------------------------
-           lea        rdi,        [kwPrompt]
-           xor        eax,        eax                ; No floating point operands to printf
-           call       printf
+           lea         rdi,         [kwPrompt]
+           xor         eax,         eax               ; No floating point operands to printf
+           call        printf
    
-           lea        rdi,        [kwScan]
-           lea        rsi,        [rbx + custRecKw]
-           xor        eax,        eax                ; No floating point operands to scanf
-           call       scanf
+           lea         rdi,         [kwScan]
+           lea         rsi,         [rbx + custRecKw]
+           xor         eax,         eax               ; No floating point operands to scanf
+           call        scanf
    
            ; -- if curr->custRecKw != 0, continue looping ------------------------
-           mov        rax,        [rbx + custRecKw]
-           cmp        rax,        0
+           mov         rax,         [rbx + custRecKw]
+           cmp         rax,         0
            jnz        .begin_loop
    
    .done:
-           mov        rax,        r12
+           mov         rax,         r12
    
-           pop        r12                        ; Restore callee-saved register
-           pop        rbx                        ; Restore callee-saved register
+           pop         r12                            ; Restore callee-saved register
+           pop         rbx                            ; Restore callee-saved register
            leave
            ret
    ```
@@ -246,9 +246,9 @@
    ; as a parameter so that I didn't have to repeat the logic to check for
    ; NUM_ELEMENTS > MAX_PRINT_SIZE.
    
-   NUM_ELEMENTS          equ        20            ; Number of elements in the array
-   ELEMENT_SIZE          equ         8            ; Size of each element
-   MAX_PRINT_SIZE        equ        20            ; Maximum number of elements to print
+   NUM_ELEMENTS          equ        20      ; Number of elements in the array
+   ELEMENT_SIZE          equ         8      ; Size of each element
+   MAX_PRINT_SIZE        equ        20      ; Maximum number of elements to print
    
    ;==============================================================================
            segment .rodata
@@ -272,23 +272,23 @@
            global main
    main:
            push        rbp
-           mov         rbp,        rsp
+           mov         rbp,         rsp
    
            ; Seed random number generator with a random number
            rdrand      rdi
-           call srandom
+           call        srandom
+
+           call        fillArrayRandom
    
-           call fillArrayRandom
+           mov         rdi,         MAX_PRINT_SIZE
+           call        printArray
    
-           mov         rdi,        MAX_PRINT_SIZE
-           call printArray
+           call        bubbleSort
    
-           call bubbleSort
+           mov         rdi,         MAX_PRINT_SIZE
+           call        printArray
    
-           mov         rdi,        MAX_PRINT_SIZE
-           call printArray
-   
-           xor         eax,        eax
+           xor         eax,         eax
            leave
            ret
    
@@ -306,36 +306,36 @@
    ;
    bubbleSort:
            push        rbp
-           mov         rbp,        rsp
+           mov         rbp,         rsp
            push        r12
            push        r13
            push        r14
    
    .begin_pass_loop:
-           xor        r14,         r14        ; numSwapsThisPass = 0
+           xor         r14,         r14        ; numSwapsThisPass = 0
    
-           lea        rsi,         [elements - ELEMENT_SIZE]
-           lea        rdi,         [elements]
-           mov        r12,         1
+           lea         rsi,         [elements - ELEMENT_SIZE]
+           lea         rdi,         [elements]
+           mov         r12,         1
    
    .begin_swap_loop:
-           inc        r12
-           add        rsi,         ELEMENT_SIZE
-           add        rdi,         ELEMENT_SIZE
+           inc         r12
+           add         rsi,         ELEMENT_SIZE
+           add         rdi,         ELEMENT_SIZE
    
-           call swapIfLarger
-           add        r14,         rax
+           call        swapIfLarger
+           add         r14,         rax
    
-           cmp        r12,         NUM_ELEMENTS
+           cmp         r12,         NUM_ELEMENTS
            jnz        .begin_swap_loop
    
-           cmp        r14,         0
-           jg        .begin_pass_loop
+           cmp         r14,         0
+           jg         .begin_pass_loop
            
-           xor        eax,         eax
-           pop        r14
-           pop        r13
-           pop        r12
+           xor         eax,         eax
+           pop         r14
+           pop         r13
+           pop         r12
            leave
            ret
    
@@ -349,27 +349,27 @@
    ;     r13 = *b
    ;
    swapIfLarger:
-           push       rbp
-           mov        rbp,         rsp
-           push       r12
-           push       r13
+           push        rbp
+           mov         rbp,         rsp
+           push        r12
+           push        r13
    
-           xor        eax,         eax
+           xor         eax,         eax
    
-           mov        r12,         [rdi]        ; r12 = *rdi;
-           mov        r13,         [rsi]        ; r13 = *rsi;
+           mov         r12,         [rdi]        ; r12 = *rdi;
+           mov         r13,         [rsi]        ; r13 = *rsi;
    
-           cmp        r12,         r13
-           jg        .done
+           cmp         r12,         r13
+           jg         .done
    
-           mov        qword [rdi], r13          ; *rdi = r13
-           mov        qword [rsi], r12          ; *rsi = r12
+           mov         qword [rdi], r13          ; *rdi = r13
+           mov         qword [rsi], r12          ; *rsi = r12
    
-           mov        rax,         1            ; will return 1 to indicate swap was performed
+           mov         rax,         1            ; will return 1 to indicate swap was performed
    
    .done
-           pop r13
-           pop r12
+           pop         r13
+           pop         r12
            leave
            ret
    
@@ -384,36 +384,36 @@
    ;     rbx = array[i]
    ;     r12 = i
    printArray:
-           push       rbp
-           mov        rbp,         rsp
-           push       rbx
-           push       r12
+           push        rbp
+           mov         rbp,         rsp
+           push        rbx
+           push        r12
    
-           cmp        rdi,         NUM_ELEMENTS
-           jl        .done
+           cmp         rdi,         NUM_ELEMENTS
+           jl         .done
    
-           lea        rbx,         [elements]         ; rbx = array
-           xor        r12,         r12                ; i = 0;
+           lea         rbx,         [elements]         ; rbx = array
+           xor         r12,         r12                ; i = 0;
    
    .begin_loop:
-           lea        rdi,         [printNumberFormat]
-           mov        rsi,         [rbx]
-           xor        eax,         eax
-           call       printf
+           lea         rdi,         [printNumberFormat]
+           mov         rsi,         [rbx]
+           xor         eax,         eax
+           call        printf
    
-           add        rbx,         ELEMENT_SIZE
-           inc        r12
-           cmp        r12,         [numElements]
-           jnz        .begin_loop
+           add         rbx,         ELEMENT_SIZE
+           inc         r12
+           cmp         r12,         [numElements]
+           jnz         .begin_loop
    
-           lea        rdi,         [printNewlineFormat]
-           xor        eax,         eax
-           call       printf
+           lea         rdi,         [printNewlineFormat]
+           xor         eax,         eax
+           call        printf
    
    .done:
-           xor        eax,         eax
-           pop        r12
-           pop        rbx
+           xor         eax,         eax
+           pop         r12
+           pop         rbx
            leave
            ret
    
@@ -429,26 +429,26 @@
    ;     r12 = i
    ;
    fillArrayRandom:
-           push       rbp
-           mov        rbp,         rsp
-           push       rbx
-           push       r12
+           push        rbp
+           mov         rbp,         rsp
+           push        rbx
+           push        r12
    
-           lea        rbx,         [elements]        ; rbx = array
-           xor        r12,         r12               ; i = 0;
+           lea         rbx,         [elements]        ; rbx = array
+           xor         r12,         r12               ; i = 0;
    
    .begin_loop:
-           call       random
-           mov        qword [rbx], rax
+           call        random
+           mov         qword [rbx], rax
    
-           add        rbx,         ELEMENT_SIZE
-           inc        r12
-           cmp        r12,         [numElements]
+           add         rbx,         ELEMENT_SIZE
+           inc         r12
+           cmp         r12,         [numElements]
            jnz        .begin_loop
    
-           xor        eax,         eax
-           pop        r12
-           pop        rbx
+           xor         eax,         eax
+           pop         r12
+           pop         rbx
            leave
            ret
    ```
@@ -468,6 +468,10 @@
    to print all the Pythagorean triples where c <= 500. Use a function to test
    whether a number is a Pythagorean triple.
 
+   ```none
+   I have not yet done this one.
+   ```
+
 4. Write an assembly program to keep track of 10 sets of size 1000000.
    Your program should accept the following commands: "add", "union",
    "print", and "quit". The program should have a function to read the
@@ -482,6 +486,10 @@
    that the set has only a few elements. After reading "quit" your program
    should exit.
 
+   ```none
+   I have not yet done this one.
+   ```
+
 5. A sequence of numbers is called bitonic if it consists of an increasing
    sequence followed by a decreasing sequence or if the sequence can be
    rotated until it consists of an increasing sequence followed by a
@@ -492,6 +500,10 @@
    and a second to determine whether the sequence is bitonic. Your
    bitonic test should not actually rotate the array.
 
+   ```none
+   I have not yet done this one.
+   ```
+
 6. Write an assembly program to read two 8 byte integers with `scanf`
    and compute their greatest common divisor using Euclid's algorithm,
    which is based on the recursive definition:
@@ -499,6 +511,135 @@
    ```none
        gcd(a, b) = a                if b = 0
                  = gcd(b, a mod b)  otherwise
+   ```
+
+   ```asm
+   a               equ       0x61                      ; 'a'
+   b               equ       0x62                      ; 'b'
+   
+   ;==============================================================================
+           segment .rodata
+   ;==============================================================================
+   prompt          db        "Enter %c: ", 0
+   scanNumber      db        "%ld", 0
+   result          db        "gcd(%ld, %ld) = %ld", 0xa, 0
+   
+   ;==============================================================================
+           segment .text
+   ;==============================================================================
+           extern printf
+           extern scanf
+   
+           global main
+   main:
+   .a_stack            equ          0        ; a's offset from the stack pointer
+   .b_stack            equ          8        ; b's offset from the stack pointer
+   
+           push        rbp
+           mov         rbp,         rsp
+           sub         rsp,         16       ; Allocate room on the stack for a and b
+   
+           ;----------------------------------------------------------------------
+           ;-- Prompt for a
+           ;----------------------------------------------------------------------
+           lea         rdi,         [prompt]
+           mov         rsi,         a
+           xor         eax,         eax
+           call        printf
+   
+           ;----------------------------------------------------------------------
+           ;-- Read a
+           ;----------------------------------------------------------------------
+           lea         rdi,         [scanNumber]
+           lea         rsi,         qword [rsp + .a_stack]
+           xor         eax,         eax
+           call        scanf
+   
+           ;----------------------------------------------------------------------
+           ;-- Prompt for b
+           ;----------------------------------------------------------------------
+           lea         rdi,         [prompt]
+           mov         rsi,         b
+           xor         eax,         eax
+           call        printf
+   
+           ;----------------------------------------------------------------------
+           ;-- Read b
+           ;----------------------------------------------------------------------
+           lea         rdi,         [scanNumber]
+           lea         rsi,         qword [rsp + .b_stack]
+           xor         eax,         eax
+           call        scanf
+   
+           ;----------------------------------------------------------------------
+           ;-- call gcd(a, b)
+           ;----------------------------------------------------------------------
+           mov         rdi,         qword [rsp + .a_stack]
+           mov         rsi,         qword [rsp + .b_stack]
+           call        gcd
+   
+           ;----------------------------------------------------------------------
+           ;-- Print result
+           ;----------------------------------------------------------------------
+           lea         rdi,         [result]
+           mov         rsi,         qword [rsp + .a_stack]
+           mov         rdx,         qword [rsp + .b_stack]
+           mov         rcx,         rax
+           xor         eax,         eax
+           call        printf
+   
+           xor         eax,         eax
+           leave
+           ret
+   
+   ;
+   ; long gcd(long a, long b);
+   ;
+   ; Returns the greatest common divisior of a an b using Euclid's algorithm.
+   ;
+   gcd:
+   .a_stack            equ          8
+   .b_stack            equ          0
+
+           push        rbp
+           mov         rbp,         rsp
+           push        rdi
+           push        rsi
+   
+           cmp         rsi,         0       ; if (b == 0)
+           je         .answer_a             ;     goto answer_a;
+   
+           ; For idiv, rdx:rax is the dividend, after operation rax contains
+           ; quotient and rdx contains remainder
+           mov         rdi,         qword [rsp + .b_stack] ; 1st parm to recusive call is b
+   
+           mov         rdx,         0
+           mov         rax,         qword [rsp + .a_stack]
+           idiv        rdi                                 ; a / b
+   
+           mov         rsi,         rdx                    ; 2nd parm is remainder
+   
+           call        gcd
+           jmp        .done
+   
+   .answer_a:
+           mov         rax,         rdi
+   
+   .done:
+           leave
+           ret
+   ```
+
+   ```none
+   $ ./ex
+   Enter a: 138
+   Enter b: 1058
+   gcd(138, 1058) = 46
+   
+   $ ./ex 
+   Enter a: 581
+   Enter b: 835
+   gcd(581, 835) = 1
    ```
 
 7. Write an assembly program to read a string of left and right
