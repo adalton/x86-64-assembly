@@ -241,6 +241,228 @@
    array contents. If the array size is less than or equal to 20, call your
    print function before and after sorting.
 
+   ```asm
+   ; Note that I tweaked the print function to take the max number of elements
+   ; as a parameter so that I didn't have to repeat the logic to check for
+   ; NUM_ELEMENTS > MAX_PRINT_SIZE.
+   
+   NUM_ELEMENTS          equ        20            ; Number of elements in the array
+   ELEMENT_SIZE          equ         8            ; Size of each element
+   MAX_PRINT_SIZE        equ        20            ; Maximum number of elements to print
+   
+   ;==============================================================================
+           segment .rodata
+   ;==============================================================================
+   numElements           dq         NUM_ELEMENTS
+   printNumberFormat     db         "%ld ", 0x0
+   printNewlineFormat    db         0xa, 0x0
+   
+   ;==============================================================================
+           segment .bss
+   ;==============================================================================
+   elements              resq       NUM_ELEMENTS  ; array of elements
+   
+   ;==============================================================================
+           segment .text
+   ;==============================================================================
+           extern random
+           extern srandom
+           extern printf
+   
+           global main
+   main:
+           push        rbp
+           mov         rbp,        rsp
+   
+           ; Seed random number generator with a random number
+           rdrand      rdi
+           call srandom
+   
+           call fillArrayRandom
+   
+           mov         rdi,        MAX_PRINT_SIZE
+           call printArray
+   
+           call bubbleSort
+   
+           mov         rdi,        MAX_PRINT_SIZE
+           call printArray
+   
+           xor         eax,        eax
+           leave
+           ret
+   
+   ;
+   ; void bubbleSort(void);
+   ;
+   ; Sort NUM_ELEMENTS in array at 'elements'
+   ;
+   ; Register usage:
+   ;     rsi = array[i - 2]
+   ;     rdi = array[i - 1]
+   ;     r12 = i
+   ;     r13 = anyElementsSwapped
+   ;     r14 = numSwapsThisPass
+   ;
+   bubbleSort:
+           push        rbp
+           mov         rbp,        rsp
+           push        r12
+           push        r13
+           push        r14
+   
+   .begin_pass_loop:
+           xor        r14,         r14        ; numSwapsThisPass = 0
+   
+           lea        rsi,         [elements - ELEMENT_SIZE]
+           lea        rdi,         [elements]
+           mov        r12,         1
+   
+   .begin_swap_loop:
+           inc        r12
+           add        rsi,         ELEMENT_SIZE
+           add        rdi,         ELEMENT_SIZE
+   
+           call swapIfLarger
+           add        r14,         rax
+   
+           cmp        r12,         NUM_ELEMENTS
+           jnz        .begin_swap_loop
+   
+           cmp        r14,         0
+           jg        .begin_pass_loop
+           
+           xor        eax,         eax
+           pop        r14
+           pop        r13
+           pop        r12
+           leave
+           ret
+   
+   ;
+   ; long swapIfLarger(long* a, long* b)
+   ;
+   ; Returns 0 if no swap, 1 is swapped
+   ;
+   ; Register usage:
+   ;     r12 - *a
+   ;     r13 = *b
+   ;
+   swapIfLarger:
+           push       rbp
+           mov        rbp,         rsp
+           push       r12
+           push       r13
+   
+           xor        eax,         eax
+   
+           mov        r12,         [rdi]        ; r12 = *rdi;
+           mov        r13,         [rsi]        ; r13 = *rsi;
+   
+           cmp        r12,         r13
+           jg        .done
+   
+           mov        qword [rdi], r13          ; *rdi = r13
+           mov        qword [rsi], r12          ; *rsi = r12
+   
+           mov        rax,         1            ; will return 1 to indicate swap was performed
+   
+   .done
+           pop r13
+           pop r12
+           leave
+           ret
+   
+   ;
+   ; void printArray(long maxSize);
+   ;
+   ; Print all elements in array 'elements'
+   ;
+   ; Preconditions: NUM_ELEMENTS > 0
+   ;
+   ; Register usage:
+   ;     rbx = array[i]
+   ;     r12 = i
+   printArray:
+           push       rbp
+           mov        rbp,         rsp
+           push       rbx
+           push       r12
+   
+           cmp        rdi,         NUM_ELEMENTS
+           jl        .done
+   
+           lea        rbx,         [elements]         ; rbx = array
+           xor        r12,         r12                ; i = 0;
+   
+   .begin_loop:
+           lea        rdi,         [printNumberFormat]
+           mov        rsi,         [rbx]
+           xor        eax,         eax
+           call       printf
+   
+           add        rbx,         ELEMENT_SIZE
+           inc        r12
+           cmp        r12,         [numElements]
+           jnz        .begin_loop
+   
+           lea        rdi,         [printNewlineFormat]
+           xor        eax,         eax
+           call       printf
+   
+   .done:
+           xor        eax,         eax
+           pop        r12
+           pop        rbx
+           leave
+           ret
+   
+   ;
+   ; void fillArrayRandom(void);
+   ;
+   ; Fill array 'elements' with random numbers
+   ;
+   ; Preconditions: NUM_ELEMENTS > 0
+   ;
+   ; Register usage:
+   ;     rbx = array[i]
+   ;     r12 = i
+   ;
+   fillArrayRandom:
+           push       rbp
+           mov        rbp,         rsp
+           push       rbx
+           push       r12
+   
+           lea        rbx,         [elements]        ; rbx = array
+           xor        r12,         r12               ; i = 0;
+   
+   .begin_loop:
+           call       random
+           mov        qword [rbx], rax
+   
+           add        rbx,         ELEMENT_SIZE
+           inc        r12
+           cmp        r12,         [numElements]
+           jnz        .begin_loop
+   
+           xor        eax,         eax
+           pop        r12
+           pop        rbx
+           leave
+           ret
+   ```
+
+   ```none
+   $ ./ex 
+   1709660540 1586825103 1982198883 669761537 2083338410 954104676 1655272428 1693831333 1627066843 1854843413 622872129 422586540 1302314433 1507759766 1175135082 36026923 1197766968 353410644 2119533890 1890890775 
+   36026923 353410644 422586540 622872129 669761537 954104676 1175135082 1197766968 1302314433 1507759766 1586825103 1627066843 1655272428 1693831333 1709660540 1854843413 1890890775 1982198883 2083338410 2119533890 
+   
+   $ ./ex 
+   1633548261 168011780 1999672145 1087307159 3700492 1250453379 1019383971 1234308604 1678456654 940252344 1281766824 1444413956 1238345346 208791763 1952827705 1809091990 723053415 1463322326 1119744819 202453681 
+   3700492 168011780 202453681 208791763 723053415 940252344 1019383971 1087307159 1119744819 1234308604 1238345346 1250453379 1281766824 1444413956 1463322326 1633548261 1678456654 1809091990 1952827705 1999672145 
+   ```
+
 3. A Pythagorean triple is a set of three integers `a`, `b`, and `c`, such that
    a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup>. Write an assembly program
    to print all the Pythagorean triples where c <= 500. Use a function to test
