@@ -24,7 +24,7 @@ dp	dd	0
 ; Register usage:
 ;   eax: N    -- the number of elements in the array
 ;   ecx: i    -- loop control variable
-;   edx: prod -- The product of array1[i] and array2[]
+;   edx: prod -- The product of array1[i] and array2[i]
 ;
 main:
 	movzx	eax,	byte [N]		; eax = N

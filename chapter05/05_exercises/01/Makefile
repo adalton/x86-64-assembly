@@ -1,5 +1,6 @@
 AS=yasm
 ASFLAGS=-f elf64 -g dwarf2
+CFLAGS=-no-pie -z noexecstack
 PROG=ex
 
 %.o : %.s ; $(AS) $(ASFLAGS) -l $*.lst $< -o $@
@@ -7,8 +8,9 @@ PROG=ex
 all: $(PROG)
 
 $(PROG).o: $(PROG).s
+
 $(PROG): $(PROG).o
-	$(CC) -no-pie -o $@ $<
+	$(CC) $(CFLAGS) -o $@ $<
 
 clean:
 	$(RM) $(PROG).lst $(PROG).o $(PROG)

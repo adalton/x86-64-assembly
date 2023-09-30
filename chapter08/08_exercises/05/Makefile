@@ -1,5 +1,6 @@
 AS=yasm
 GDB=gdb
+CFLAGS=-no-pie -z noexecstack
 GDBFLAGS=-ex "break main"
 ASFLAGS=-f elf64 -g dwarf2
 PROG=ex

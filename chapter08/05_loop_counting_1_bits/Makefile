@@ -1,5 +1,6 @@
 AS=yasm
 GDB=gdb
+CFLAGS=-no-pie -z noexecstack
 GDBFLAGS=-ex "break main"
 ASFLAGS=-f elf64 -g dwarf2
 PROG=ex
@@ -15,7 +16,7 @@ $(SAMPLE).s: $(SAMPLE).c
 	$(CC) -O3 -S -masm=intel -o $@ $<
 
 $(PROG): $(PROG).o
-	$(CC) -no-pie -o $@ $<
+	$(CC) $(CFLAGS) -o $@ $<
 
 clean:
 	$(RM) $(PROG).lst $(PROG).o $(PROG) $(SAMPLE).s

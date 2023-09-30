@@ -1,5 +1,6 @@
 AS=yasm
 GDB=gdb
+CFLAGS=-no-pie -z noexecstack
 GDBFLAGS=-ex "break main"
 ASFLAGS=-f elf64 -g dwarf2
 EXECRISE1=exercise_1
@@ -12,7 +13,7 @@ all: $(PROGS)
 $(EXECRISE1).o: $(EXECRISE1).s
 
 $(EXECRISE1): $(EXECRISE1).o
-	$(CC) -o $@ $<
+	$(CC) $(CFLAGS) -o $@ $<
 
 clean:
 	$(RM) *.lst *.o *.bak $(PROGS)

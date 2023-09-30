@@ -15,7 +15,7 @@
 fibs	resq	100				; 100 quad-words initialize to 0
 
 	segment .data
-N	db	2				; elements in fibs[] (>= 2)
+N	db	93				; elements in fibs[] (>= 2)
 
 	segment .text
 	global main
