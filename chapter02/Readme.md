@@ -299,3 +299,7 @@
 
 8. Write an assembly "program" (data only) defining data values using `dw`
    and `dd` for all the numbers in exercise 1-4.
+
+   ```
+   I have not yet done this one.
+   ```

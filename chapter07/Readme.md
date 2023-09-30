@@ -484,7 +484,7 @@
    of the bit string into a third memory location.
 
    ```none
-   I didn't do this one.
+   I have not yet done this one.
    ```
 
 6. Write an assembly progrma to perform a product of 2 float values using
@@ -492,5 +492,5 @@
    and store the product in memory.
 
    ```none
-   I didn't do this one.
+   I have not yet done this one.
    ```
