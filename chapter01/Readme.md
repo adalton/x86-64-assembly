@@ -6,28 +6,30 @@
    program indicates an error. Change the program to yield a 0 status.
 
    ```asm
-   ;
-   ; Program: exit
-   ;
-   ; Executes the exit system call
-   ;
-   ; No input
-   ;
-   ; Output: Only the exit status ($? in the shell)
-   ;
        segment .text
        global  _start ; _start is the entry point the linker expects
    
    _start:
-       mov eax, 60 ; 60 is the exit syscall number
-       mov edi,  0 ; the status value to return
-       syscall     ; execute the system call number stored in eax
+       mov eax, 60    ; 60 is the exit syscall number
+       mov edi,  0    ; the status value to return
+       syscall        ; execute the system call number stored in eax
        end
    ```
 
 2. Modify the assembly program to define `main` rather than `start`.
    Assemble it and link it using `ebe`. What is the difference in size of the
    executables?
+
+   ```asm
+       segment .text
+       global  main
+   
+   main:
+       mov eax, 60 ; 60 is the exit syscall number
+       mov edi,  0 ; the status value to return
+       syscall     ; execute the system call number stored in eax
+       end
+   ```
 
    I'm using `yasm` + `ld` instead of `ebe`.  To change the entry point from
    `_start` to `main`, I needed to use `gcc` to finish the linking.  I used
