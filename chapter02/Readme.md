@@ -225,15 +225,76 @@
 
 4. Convert the following numbers to 32-bit floating point.
    1. 1.375
+      * Sign bit
+        ```none
+        The number is positive, so the sign bit is 0.
+        ```
+      * Convert the number to binary
+        * The whole part
+          ```none
+             1 / 2 = 0 r1
+
+          => 1
+          ```
+        * The fractional part
+          ```none
+             0.375 * 2 = 0.75  -> 0 is the first digit
+             0.75  * 2 = 1.50  -> 1 is the second digit
+             0.50  * 2 = 1.00  -> 1 is the third digit
+
+          => .011
+          ```
+        * Putting things together
+          ```none
+             1.375 = 1.011b
+          ```
+        * Convert to exponential notation
+          ```none
+             It's already in that form  => 1.011 * 2^0
+          ```
+        * Break down all the pieces
+          * Sign bit: 0
+          * Fraction: 01100000000000000000000
+          * Exponent:
+            ```none
+               bias + power-2 exponent
+             = 127  + 0
+
+            => 01111111b
+          ```
+        * Resulting 32-bit floating point number
+          ```none
+             0 01111111 01100000000000000000000
+          ```
+
    2. 0.041015625
+      ```none
+      ```
+
    3. -571.3125
+      ```none
+      ```
+
    4. 4091.125
+      ```none
+      ```
 
 5. Convert the following numbers from 32-bit floating point to decimal.
    1. 0x3F82000
+      ```none
+      ```
+
    2. 0xBF82000
+      ```none
+      ```
+
    3. 0x4F84000
+      ```none
+      ```
+
    4. 0x3C86000
+      ```none
+      ```
 
 6. Perform the binary addition of the 2 unsigned integers below. Show
    each carry as a 1 above the proper position.
