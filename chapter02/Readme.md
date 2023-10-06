@@ -261,7 +261,7 @@
              = 127  + 0
 
             => 01111111b
-          ```
+            ```
         * Resulting 32-bit floating point number
           ```none
              0 01111111 01100000000000000000000
