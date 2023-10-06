@@ -238,19 +238,19 @@
           ```
         * The fractional part
           ```none
-             0.375 * 2 = 0.75  -> 0 is the first digit
-             0.75  * 2 = 1.50  -> 1 is the second digit
-             0.50  * 2 = 1.00  -> 1 is the third digit
+             0.375 * 2 = 0.75  ->  0 is the first digit
+             0.75  * 2 = 1.50  ->  1 is the next digit
+             0.50  * 2 = 1.00  ->  1 is the next digit
 
           => .011
           ```
         * Putting things together
           ```none
-             1.375 = 1.011b
+          1.375 = 1.011b
           ```
         * Convert to exponential notation
           ```none
-             It's already in that form  => 1.011 * 2^0
+          It's already in that form  => 1.011 * 2^0
           ```
         * Break down all the pieces
           * Sign bit: 0
@@ -259,17 +259,64 @@
             ```none
                bias + power-2 exponent
              = 127  + 0
+             = 127
 
             => 01111111b
             ```
         * Resulting 32-bit floating point number
           ```none
-             0 01111111 01100000000000000000000
+          0 01111111 01100000000000000000000
           ```
 
    2. 0.041015625
-      ```none
-      ```
+      * Sign bit
+        ```none
+        The number is positive, so the sign bit is 0.
+        ```
+      * Convert the number to binary
+        * The whole part
+          ```none
+             0 / 2 = 0 r0
+
+          => 0
+          ```
+        * The fractional part
+          ```none
+             0.041015625 * 2 = 0.08203125  ->  0 is the first digit
+             0.08203125  * 2 = 0.1640625   ->  0 is the next digit
+             0.1640625   * 2 = 0.328125    ->  0 is the next digit
+             0.328125    * 2 = 0.65625     ->  0 is the next digit
+             0.65625     * 2 = 1.3125      ->  1 is the next digit
+             0.3125      * 2 = 0.625       ->  0 is the next digit
+             0.625       * 2 = 1.25        ->  1 is the next digit
+             0.25        * 2 = 0.50        ->  0 is the next digit
+             0.50        * 2 = 1.00        ->  1 is the next digit
+
+          => .000010101
+          ```
+        * Putting things together
+          ```none
+          0.041015625 = 0.000010101b
+          ```
+        * Convert to exponential notation
+          ```none
+          0.000010101b =  1.0101b * 2^(-5)
+          ```
+        * Break down all the pieces
+          * Sign bit: 0
+          * Fraction: 01010000000000000000000
+          * Exponent:
+            ```none
+               bias + power-2 exponent
+             = 127  + (-5)
+             = 122
+
+            => 01111010b
+            ```
+        * Resulting 32-bit floating point number
+          ```none
+          0 01111010 01010000000000000000000
+          ```
 
    3. -571.3125
       ```none
