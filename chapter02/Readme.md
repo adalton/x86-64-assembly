@@ -234,7 +234,7 @@
           ```none
              1 / 2 = 0 r1
 
-          => 1
+          => 1b
           ```
         * The fractional part
           ```none
@@ -242,7 +242,7 @@
              0.75  * 2 = 1.50  ->  1 is the next digit
              0.50  * 2 = 1.00  ->  1 is the next digit
 
-          => .011
+          => .011b
           ```
         * Putting things together
           ```none
@@ -261,6 +261,14 @@
              = 127  + 0
              = 127
 
+                 127 / 2 = 63 r1
+                  63 / 2 = 31 r1
+                  31 / 2 = 15 r1
+                  15 / 2 =  7 r1
+                   7 / 2 =  3 r1
+                   3 / 2 =  1 r1
+                   1 / 2 =  0 r1
+
             => 01111111b
             ```
         * Resulting 32-bit floating point number
@@ -278,7 +286,7 @@
           ```none
              0 / 2 = 0 r0
 
-          => 0
+          => 0b
           ```
         * The fractional part
           ```none
@@ -292,7 +300,7 @@
              0.25        * 2 = 0.50        ->  0 is the next digit
              0.50        * 2 = 1.00        ->  1 is the next digit
 
-          => .000010101
+          => .000010101b
           ```
         * Putting things together
           ```none
@@ -300,7 +308,7 @@
           ```
         * Convert to exponential notation
           ```none
-          0.000010101b =  1.0101b * 2^(-5)
+          0.000010101b = 1.0101b * 2^(-5)
           ```
         * Break down all the pieces
           * Sign bit: 0
@@ -310,6 +318,14 @@
                bias + power-2 exponent
              = 127  + (-5)
              = 122
+
+                 122 / 2 = 61 r0
+                  61 / 2 = 30 r1
+                  30 / 2 = 15 r0
+                  15 / 2 =  7 r1
+                   7 / 2 =  3 r1
+                   3 / 2 =  1 r1
+                   1 / 2 =  1 r1
 
             => 01111010b
             ```
@@ -337,7 +353,7 @@
                2 / 2 =   1 r0
                1 / 2 =   0 r1
 
-          => 1000111011
+          => 1000111011b
           ```
         * The fractional part
           ```none
@@ -346,7 +362,7 @@
              0.25   * 2 = 0.50   ->  0 is the next digit
              0.50   * 2 = 1.00   ->  1 is the next digit
 
-          => .0101
+          => .0101b
           ```
         * Putting things together
           ```none
@@ -358,12 +374,21 @@
           ```
         * Break down all the pieces
           * Sign bit: 1
-          * Fraction: 0001110110101
+          * Fraction: 00011101101010000000000
           * Exponent:
             ```none
                bias + power-2 exponent
              = 127  + 9
              = 136
+
+                 136 / 2 = 68 r0
+                  68 / 2 = 34 r0
+                  34 / 2 = 17 r0
+                  17 / 2 =  8 r1
+                   8 / 2 =  4 r0
+                   4 / 2 =  2 r0
+                   2 / 2 =  1 r0
+                   1 / 2 =  0 r1
 
             => 10001000b
             ```
@@ -373,8 +398,68 @@
           ```
 
    4. 4091.125
-      ```none
-      ```
+      * Sign bit
+        ```none
+        The number is positive, so the sign bit is 0.
+        ```
+      * Convert the number to binary
+        * The whole part
+          ```none
+             4091 / 2 = 2045 r1
+             2045 / 2 = 1022 r1
+             1022 / 2 =  511 r0
+              511 / 2 =  255 r1
+              255 / 2 =  127 r1
+              127 / 2 =   63 r1
+               63 / 2 =   31 r1
+               31 / 2 =   15 r1
+               15 / 2 =    7 r1
+                7 / 2 =    3 r1
+                3 / 2 =    1 r1
+                1 / 2 =    0 r1
+
+          => 111111111011b
+          ```
+        * The fractional part
+          ```none
+             0.125 * 2 = 0.25  ->  0 is the first digit
+             0.25  * 2 = 0.50  ->  0 is the next digit
+             0.50  * 2 = 1.00  ->  1 is the next digit
+
+          => .001b
+          ```
+        * Putting things together
+          ```none
+          4091.125 = 111111111011.001b
+          ```
+        * Convert to exponential notation
+          ```none
+          111111111011.001 = 1.11111111011001 * 2^11
+          ```
+        * Break down all the pieces
+          * Sign bit: 0
+          * Fraction: 11111111011001000000000
+          * Exponent:
+            ```none
+               bias + power-2 exponent
+             = 127  + 11
+             = 138
+
+                 138 / 2 = 69 r0
+                  69 / 2 = 34 r1
+                  34 / 2 = 17 r0
+                  17 / 2 =  8 r1
+                   8 / 2 =  4 r0
+                   4 / 2 =  2 r0
+                   2 / 2 =  1 r0
+                   1 / 2 =  0 r1
+
+            => 10001010b
+            ```
+        * Resulting 32-bit floating point number
+          ```none
+          0 10001010 11111111011001000000000
+          ```
 
 5. Convert the following numbers from 32-bit floating point to decimal.
    1. 0x3F82000
