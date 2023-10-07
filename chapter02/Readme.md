@@ -319,8 +319,58 @@
           ```
 
    3. -571.3125
-      ```none
-      ```
+      * Sign bit
+        ```none
+        The number is negative, so the sign bit is 1.
+        ```
+      * Convert the number to binary
+        * The whole part
+          ```none
+             571 / 2 = 285 r1
+             285 / 2 = 142 r1
+             142 / 2 =  71 r0
+              71 / 2 =  35 r1
+              35 / 2 =  17 r1
+              17 / 2 =   8 r1
+               8 / 2 =   4 r0
+               4 / 2 =   2 r0
+               2 / 2 =   1 r0
+               1 / 2 =   0 r1
+
+          => 1000111011
+          ```
+        * The fractional part
+          ```none
+             0.3125 * 2 = 0.625  ->  0 is the first digit
+             0.625  * 2 = 1.25   ->  1 is the next digit
+             0.25   * 2 = 0.50   ->  0 is the next digit
+             0.50   * 2 = 1.00   ->  1 is the next digit
+
+          => .0101
+          ```
+        * Putting things together
+          ```none
+          571.3125 = 1000111011.0101b
+          ```
+        * Convert to exponential notation
+          ```none
+          1000111011.0101 = 1.0001110110101 * 2^9
+          ```
+        * Break down all the pieces
+          * Sign bit: 1
+          * Fraction: 0001110110101
+          * Exponent:
+            ```none
+               bias + power-2 exponent
+             = 127  + 9
+             = 136
+
+            => 10001000b
+            ```
+        * Resulting 32-bit floating point number
+          ```none
+          1 10001000 00011101101010000000000
+          ```
 
    4. 4091.125
       ```none
