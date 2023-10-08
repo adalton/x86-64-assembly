@@ -565,6 +565,12 @@
                                                                --------
         =>                                                     1.015625
         ```
+      * Apply the sign bit
+        ```none
+        The sign bit is 0, so the number is positive.
+
+        Answer: 1.015625
+        ```
 
    2. 0xBF82000
       ```none
