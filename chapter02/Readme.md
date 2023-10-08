@@ -463,8 +463,108 @@
 
 5. Convert the following numbers from 32-bit floating point to decimal.
    1. 0x3F82000
-      ```none
-      ```
+
+      Note that 0x3F82000 doesn't represent 32-bits, it represents only 28.
+      Normally we'd zero-fill on the left (i.e., 0x03F82000).  I worked
+      through the assignment using that and the numbers were ... extreme.
+      Instead, I'm going to zero-fill on the right (i.e., 0x3F820000).
+
+      * Convert hex to decimal
+        ```none
+         0 * 16^0     =  0 *         1     =          0 
+         0 * 16^1     =  0 *        16     =          0 
+         0 * 16^2     =  0 *       256     =          0
+         0 * 16^3     =  0 *      4096     =          0
+         2 * 16^4     =  2 *     65536     =     131072
+         8 * 16^5     =  8 *   1048576     =    8388608
+         F * 16^6     = 15 *  16777216     =  251658240
+         3 * 16^7     =  3 * 268435456     =  805306368
+                                             ----------
+                                             1065484288
+        ```
+      * Convert decimal to binary
+        ```none
+        1065484288 / 2 =  532742144 r0
+         532742144 / 2 =  266371072 r0
+         266371072 / 2 =  133185536 r0
+         133185536 / 2 =   66592768 r0
+          66592768 / 2 =   33296384 r0
+          33296384 / 2 =   16648192 r0
+          16648192 / 2 =    8324096 r0
+           8324096 / 2 =    4162048 r0
+           4162048 / 2 =    2081024 r0
+           2081024 / 2 =    1040512 r0
+           1040512 / 2 =     520256 r0
+            520256 / 2 =     260128 r0
+            260128 / 2 =     130064 r0
+            130064 / 2 =      65032 r0
+             65032 / 2 =      32516 r0
+             32516 / 2 =      16258 r0
+             16258 / 2 =       8129 r0
+              8129 / 2 =       4064 r1
+              4064 / 2 =       2032 r0
+              2032 / 2 =       1016 r0
+              1016 / 2 =        508 r0
+               508 / 2 =        254 r0
+               254 / 2 =        127 r0
+               127 / 2 =         63 r1
+                63 / 2 =         31 r1
+                31 / 2 =         15 r1
+                15 / 2 =          7 r1
+                 7 / 2 =          3 r1
+                 3 / 2 =          1 r1
+                 1 / 2 =          0 r1
+
+        => 111111100000100000000000000000b
+        ```
+      * Expand binary representation to 32 bits
+        ```
+        111111100000100000000000000000b  =>  00111111100000100000000000000000b
+        ```
+      * Split into fields (1 sign bit, 8 exponent bits, 23 fraction bits)
+        ```none
+        0 01111111 00000100000000000000000
+        ```
+      * Convert biased exponent to decimal
+        ```none
+           Biased exponent: 01111111
+
+           1 * 2^0  =  1 *   1  =   1
+           1 * 2^1  =  1 *   2  =   2
+           1 * 2^2  =  1 *   4  =   4
+           1 * 2^3  =  1 *   8  =   8
+           1 * 2^4  =  1 *  16  =  16
+           1 * 2^5  =  1 *  32  =  32
+           1 * 2^6  =  1 *  64  =  64
+           0 * 2^7  =  0 * 128  =   0
+                                  ---
+        =>                        127
+        ```
+      * Convert biased exponent to exponent
+        ```none
+         biased-exponent =  bias + power-2 exponent
+         127             =  127  + power-2 exponent
+        -127               -127
+           0             =         power-2 exponent
+        ```
+      * Apply exponent to fraction (with implied leading 1)
+        ```none
+           1.00000100000000000000000 * 2^(0)
+
+        => 1.00000100000000000000000
+        ```
+      * Convert binary to decimal
+        ```none
+           1 * 2^0      =   1 * 1                           =  1
+           0 * 2^(-1)   =   0 * (1/ 2)   =   0 * 0.5        =  0
+           0 * 2^(-2)   =   0 * (1/ 4)   =   0 * 0.25       =  0
+           0 * 2^(-3)   =   0 * (1/ 8)   =   0 * 0.125      =  0
+           0 * 2^(-4)   =   0 * (1/16)   =   0 * 0.0625     =  0
+           0 * 2^(-5)   =   0 * (1/32)   =   0 * 0.03125    =  0
+           1 * 2^(-6)   =   1 * (1/64)   =   1 * 0.015625   =  0.015625
+                                                               --------
+        =>                                                     1.015625
+        ```
 
    2. 0xBF82000
       ```none
