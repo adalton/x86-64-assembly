@@ -995,6 +995,54 @@
 8. Write an assembly "program" (data only) defining data values using `dw`
    and `dd` for all the numbers in exercise 1-4.
 
+   ```asm
+           segment .data
+   a_dw            dw         1.375
+   b_dw            dw         0.041015625
+   c_dw            dw      -571.3125
+   d_dw            dw      4091.125
+   
+   a_dd            dd         1.375
+   b_dd            dd         0.041015625
+   c_dd            dd      -571.3125
+   d_dd            dd      4091.125
+   
+   
+           segment .text
+           global main
+   main:
+           push       rbp
+           mov        rbp,        rsp
+   
+           xor        eax,        eax
+           leave
+           ret
    ```
-   I have not yet done this one.
+
+   The `dw` values are 16 bits and the `dd` values are 32 bits.  Let's examine
+   the values.
+
+   To examine 16 bits, we can use `x/th` (t=binary, h = half-word = 16 bits).
+   To examine 32 bits, we can use `x/tw` (t=binary, w = word = 32 bits).
+
+   ```none
+   $ gdb ./ex
+   Reading symbols from .../ex...
+   (gdb) x/th &a_dw
+   0x404010:       0011110110000000
+   (gdb) x/th &b_dw
+   0x404012:       0010100101000000
+   (gdb) x/th &c_dw
+   0x404014:       1110000001110111
+   (gdb) x/th &d_dw
+   0x404016:       0110101111111110
+   
+   (gdb) x/tw &a_dd
+   0x404018:       00111111101100000000000000000000
+   (gdb) x/tw &b_dd
+   0x40401c:       00111101001010000000000000000000
+   (gdb) x/tw &c_dd
+   0x404020:       11000100000011101101010000000000
+   (gdb) x/tw &d_dd
+   0x404024:       01000101011111111011001000000000
    ```
