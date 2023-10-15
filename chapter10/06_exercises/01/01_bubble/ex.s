@@ -218,13 +218,9 @@ bubbleSort:
     	cmp		edx,			ecx
     	jle		.end_if
 
-	xor		edx,			ecx
-	xor		ecx,			edx
-	xor		edx,			ecx
-
-	mov		[rdi + rsi * .ELEMENT_SIZE],	ecx
-	dec		rsi
 	mov		[rdi + rsi * .ELEMENT_SIZE],	edx
+	dec		rsi
+	mov		[rdi + rsi * .ELEMENT_SIZE],	ecx
 
 	mov		rsi,			1
 	mov		[rsp + .swapped],	rsi		; swapped = true
