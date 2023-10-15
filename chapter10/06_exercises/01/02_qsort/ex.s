@@ -1,14 +1,25 @@
 ;
 ; ex.s
 ;
-; Exercise 1 (part 1), page 131
+; Exercise 1 (part 2), page 131
 ;
-; Write 2 test programs: one to sort an array of random 4-byte integers
-; using bubble sort... Your program should use the C library function
-; `atol` to convert a number supplied on the command line from ASCII to
-; long. This number is the size of the array (number of 4-byte integers).
-; Then your program can allocate the array using `malloc` and fill the array
-; using `random`.
+; Write 2 test programs: ...and a second program to sort an array of random
+; 4-byte ; integers using the `qsort` function from the C library. Your program
+; should ; use the C library function `atol` to convert a number supplied on
+; the ; command line from ASCII to long. This number is the size of the array
+; (number of 4-byte integers). Then your program can allocate the array
+; using `malloc` and fill the array using `random`. You call qsort like
+; this:
+;
+;      qsort(array, n, 4, compare );
+;
+; The second parameter is the number of array elements to sort and the third
+; is the size in bytes of each element.  The fourth paramter is the
+; address of a comparison function. Your comparison function will accept two
+; parameters.  Each will return a pointer to a 4-byte integer. The comparison
+; function should return a negative, 0, or positive value based on the ordering
+; of the 2 integers.  All you have to do is subtract the second integer from
+; the first.
 ;
 	segment .data
 format		db		"%s", 0x0a, 0
@@ -20,6 +31,7 @@ format		db		"%s", 0x0a, 0
 	extern free
 	extern malloc
 	extern printf
+	extern qsort
 	extern random
 main:
 .array	equ		0
@@ -32,24 +44,27 @@ main:
 	mov		rdi,			[rcx + 8]	; Skip the command name
 	call		atol
 
-	; The desired array size is now in rax, save a copy on the stack
+;       The desired array size is now in rax, save a copy on the stack
 	mov		[rsp + .size],		rax
-
+	
 	mov		rdi,			rax
 	call		create
 
-	; The pointer to the array is now in rax, save a copy on the stack
+;       The pointer to the array is now in rax, save a copy on the stack
 	mov		[rsp + .array],		rax
 
 
 	mov		rdi,			[rsp + .array]
 	mov		rsi,			[rsp + .size]
 	call		fill
-	; The array is now full of random numbers
+;       The array is now full of random numbers
 
+;       qsort(array, n, 4, compare );
 	mov		rdi,			[rsp + .array]
 	mov		rsi,			[rsp + .size]
-	call		bubbleSort
+	mov		rdx,			4
+	mov		rcx,			compare
+	call		qsort
 
 ;	Print the result
 	mov		rdi,			[rsp + .array]
@@ -161,84 +176,5 @@ print:
 	mov		[rsp + .i],		rcx
 	cmp		rcx,			[rsp + .size]
 	jl		.more
-	leave
-	ret
-
-; void bubbleSort(int* array, const int size)
-; {
-;     bool swapped = false;
-;     int i;
-;
-;     do {
-;         swapped = false;
-;
-;         for (i = 0; i < (size - 1); ++i) {
-;             if (array[i] > array[i + 1]) {
-;                 array[i] = array[i] ^ array[i + 1];
-;                 array[i + 1] = array[i] ^ array[i + 1];
-;                 array[i] = array[i] ^ array[i + 1];
-;                 swapped = true;
-;             }
-;         }
-;     } while (swapped);
-; }
-
-bubbleSort:
-.ELEMENT_SIZE		equ	 		4		; Size of each array element
-.array			equ			0
-.size			equ			.array   + 8
-.swapped		equ			.size    + 8
-.i			equ			.swapped + 8
-
-	push		rbp
-	mov		rbp,			rsp
-	sub		rsp,			32
-
-	; Subtract 1 from rsi (size) since we reference only (size - 1)
-	sub		rsi,			1
-
-	; Save a copy of the parameters on the stack
-	mov		[rsp + .array],		rdi
-	mov		[rsp + .size],		rsi
-
-.begin_do:
- 	mov		rsi,			0
- 	mov		[rsp + .swapped],	rsi		; swapped = false
- 	mov		[rsp + .i],		rsi		; i = 0
-
-.for_test:
- 	cmp		rsi,			[rsp + .size]	; i < size
- 	jge		.end_for
-
-; .begin_if:
-    	mov		rdi,			[rsp + .array]
-    	mov		edx,			[rdi + rsi * .ELEMENT_SIZE]
-    	inc		rsi
-    	mov		ecx,			[rdi + rsi * .ELEMENT_SIZE]
-    	cmp		edx,			ecx
-    	jle		.end_if
-
-	xor		edx,			ecx
-	xor		ecx,			edx
-	xor		edx,			ecx
-
-	mov		[rdi + rsi * .ELEMENT_SIZE],	ecx
-	dec		rsi
-	mov		[rdi + rsi * .ELEMENT_SIZE],	edx
-
-	mov		rsi,			1
-	mov		[rsp + .swapped],	rsi		; swapped = true
-.end_if:
-	mov		rsi,			[rsp + .i]
- 	inc		rsi
- 	mov		[rsp + .i],		rsi		; i++
- 	jmp		.for_test
-
-.end_for:
-;     } while (swapped);
-	mov		rsi,			[rsp + .swapped]
-	cmp		rsi,			0
-	jne		.begin_do
-
 	leave
 	ret
