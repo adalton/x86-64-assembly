@@ -424,7 +424,7 @@
    a binary search function to search for numbers in the array. The size of the
    array should be given as a command line parameter. Your program should use
    `random() % 1000` for values in the array.  This will make it simplier to
-   enter values to search for.  After building the array and sortint it,
+   enter values to search for.  After building the array and sorting it,
    your program should enter a loop reading numbers with `scanf` until
    `scanf` fails to return a 1. For each number read, your program should
    call your binary search function and either report that the number was
